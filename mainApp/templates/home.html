@@ -1,0 +1,176 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap CSS link -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    
+    {% block title %}
+    <title>Registration | Form </title>
+    {% endblock %}
+</head>
+<body>
+    <!-- navbar start -->
+    <nav class="navbar navbar-expand-lg bg-success sticky-top ">
+        <div class="container-fluid">
+            <a class="navbar-brand text light" href="/">Registraion Form</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active text light" aria-current="page" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text ligh" href="/data/">Employee Data</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- navbar end -->
+
+{% block body %}
+    <div class="container-fluid my-3">
+        <h5 class="bg-success text-center text-light p-2">Add Employee Record</h5>
+        <div class="card p-3">
+            <form action="" method="POST">
+                {% csrf_token %}
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label>First Name</label>
+                        <input type="text" name="firstname" required placeholder="Enter First Name" class="form-control">
+                    </div>
+                    <div class="col-md-6">
+                        <label>Last Name</label>
+                        <input type="text" name="lastname" required placeholder="Enter Last Name" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label>Email Address</label>
+                        <input type="email" name="email" required placeholder="Enter Email Address" class="form-control">
+                    </div>
+                    <div class="col-md-6">
+                        <label>Date of Birth</label>
+                          <input type="date" name="dob" id="dob" placeholder="Enter birthdate" class="form-control" onChange="age_calculate()">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label>Age</label>
+                          <input type="text" name="age" id="age" placeholder="Enter DOB" class="form-control">
+                    </div>
+                    <div class="col-md-6">
+                        <label>Select Gender:</label>
+                        <input type="radio" id="male" name="gender" value="male">
+                        <label for="male">Male</label>
+                            
+                         <input type="radio" id="female" name="gender" value="female">
+                        <label for="female">Female</label>
+                            
+                        <input type="radio" id="other" name="gender" value="other">
+                        <label for="other">Other</label>  
+                    </div>
+                </div>
+    
+                <div class="row mb-3" style="width:48%">
+                    <div class="row mb-3">
+                    <label for="country">Country</label>
+                    <select class="form-select"  id="country" onChange="countryfield()">
+                        <option selected>Choose Country</option>
+                        {% for i in country %}
+                        <option value="{{i.id}}" {% if request.GET.country == i.id|lower %}selected{% endif %}>{{i.name}}</option>
+                        {% endfor %}
+                    </select>
+                    </div>
+                    <div class="row mb-3">
+                    <label for="state">State</label>
+                    <select class="form-select" id="state" onChange="statefield()">
+                        <option selected>Choose State</option>
+                        {% for i in state %}
+                        <option value="{{i.id}}" id="state" {% if request.GET.state == i.id|lower %}selected{% endif %}>{{i.name}}</option>
+                        {% endfor %}
+                    </select>
+                    </div>
+                    <div class="row mb-3">
+                    <label for="city">City</label>
+                    <select class="form-select" id="city" >
+                        <option selected>Choose City</option>
+                        {% for i in city %}
+                        <option value="{{i.id}}" > {{i.name}}</option>
+                        {% endfor %}
+                    </select>
+                    </div>
+                    </div>
+                </div>
+                <div class="row my-3">
+                    <div class="col-6">
+                        <button type="reset" class="btn btn-danger w-100 btn-sm">Reset</button>
+                    </div>
+                    <div class="col-6">
+                        <button type="submit" class="btn btn-success w-100 btn-sm">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- javascipt to show country, state, city dropdawn on form page -->
+        <script>
+            function countryfield(event){
+                countryId = document.getElementById('country').value;
+                window.location = "/?country="+countryId;
+                event.preventDefault()
+                document.getElementById('country').value = country;
+            }
+    
+            function statefield(){
+                stateId = document.getElementById('state').value;
+                window.location = "/?country="+'{{request.GET.country}}'+"&state="+stateId
+                document.getElementById('state').value = state;
+            } 
+
+
+             function age_calculate() {
+                dob = document.getElementById('dob').value
+
+                console.log(dob);
+                var dob = new Date(dob);  
+                var month_diff = Date.now() - dob.getTime();  
+                var age_dt = new Date(month_diff);       
+                var year = age_dt.getUTCFullYear(); 
+                var age = Math.abs(year - 1970);  
+                if (age < 14){
+                    alert('You must be older than 14 years to register.');
+                    document.getElementById('dob').value = ""                           
+                }else{
+                    document.getElementById('age').value = age;
+                }
+            }
+        </script>
+
+
+
+    </div>
+{% endblock %}
+
+
+
+    <!-- Footer  -->
+    <footer class="bg-success text-center p-2 fixed-bottom">
+        <p>copyright@frequentresearch.com</p>
+    </footer>
+    <!-- JavaScript bootstrap link -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+        crossorigin="anonymous"></script>
+</body>
+</html>
+

@@ -1,0 +1,39 @@
+{% extends 'home.html' %}
+{% load static %}
+{% block title %}
+<title>Registration | Data</title>
+{% endblock %}
+
+{% block body %}
+<h5 class="mt-2 bg-success p-2 text-center text-light">Employee Record</h5>
+<div class="table-responsive mb-5">
+    <table class="table table-bordered table-success table-striped table-hover">
+        <tr>
+            <th>Id</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Birthdate</th>
+            <th>Age</th>
+            <th>Gender</th>
+            <th>City</th>
+            <th>State</th>
+            <th>Country</th>
+        </tr>
+        {% for item in data %}
+        <tr>
+            <td>{{item.id}}</td>
+            <td>{{item.firstname}}</td>
+            <td>{{item.lastname}}</td>
+            <td>{{item.email}}</td>
+            <td>{{item.dob}}</th>
+            <td>{{item.age}}</td>
+            <td>{{item.gender}}</td>
+            <td>{{item.city}}</td>
+            <td>{{item.state}}</td>
+            <td>{{item.country}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}
